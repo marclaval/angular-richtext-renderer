@@ -1,0 +1,31 @@
+{
+  "name": "angular-richtext-renderer",
+  "version": "0.0.0",
+  "description": "A rich text renderer for Angular 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlaval/angular-richtext-renderer.git"
+  },
+  "keywords": ["Angular", "renderer", "rich text", "markdown"],
+  "author": "Marc Laval <mlaval>",
+  "license": "Apache License Version 2.0",
+  "bugs": {
+    "url": "https://github.com/mlaval/angular-richtext-renderer/issues"
+  },
+  "homepage": "https://github.com/mlaval/angular-richtext-renderer#readme",
+  "devDependencies": {
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-typescript": "^2.8.0"
+  },
+  "dependencies": {
+    "angular2": "2.0.0-alpha.46",
+    "parse5": "1.5.0",
+    "reflect-metadata": "0.1.2",
+    "zone.js": "0.5.8"
+  }
+}
