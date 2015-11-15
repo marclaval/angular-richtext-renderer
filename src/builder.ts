@@ -7,6 +7,7 @@ import {
   RenderTemplateCmd,
   RenderTextCmd
   } from 'angular2/angular2';
+import {RenderComponentTemplate} from 'angular2/src/core/render/api';
 import {Node, ComponentNode, ElementNode, TextNode, AnchorNode} from './node';
 import {RichTextRenderer} from "./rich_text_renderer";
 
@@ -14,7 +15,7 @@ export class RichTextRenderViewBuilder implements RenderCommandVisitor {
   private parentStack: Array<Node> = [];
   private rootNodes: Array<Node> = [];
 
-  constructor(public renderer: RichTextRenderer, public commands: RenderTemplateCmd[], public parentComponent: ComponentNode, context: BuildContext) {
+  constructor(public componentTemplates: Map<string, RenderComponentTemplate>, public commands: RenderTemplateCmd[], public parentComponent: ComponentNode, context: BuildContext) {
     if (parentComponent) {
       this.parentStack.push(parentComponent);
     } else {
@@ -29,7 +30,6 @@ export class RichTextRenderViewBuilder implements RenderCommandVisitor {
   }
 
   visitText(cmd:RenderTextCmd, context: BuildContext):any {
-    //console.log('visitText', arguments);
     var text = new TextNode(cmd.value, cmd.isBound);
     this._addChild(text, cmd.ngContentIndex);
     if (cmd.isBound) {
@@ -39,7 +39,6 @@ export class RichTextRenderViewBuilder implements RenderCommandVisitor {
   }
 
   visitNgContent(cmd:RenderNgContentCmd, context: BuildContext):any {
-    //console.log('visitNgContent', arguments);
     if (this.parentComponent) {
       if (this.parentComponent.isRoot) {
         console.error('TODO: isRoot case in visitNgContent')
@@ -55,7 +54,6 @@ export class RichTextRenderViewBuilder implements RenderCommandVisitor {
   }
 
   visitBeginElement(cmd: RenderBeginElementCmd, context: BuildContext):any {
-    //console.log('visitBeginElement', arguments);
     var attributes: any = {};
     for (var i = 0; i < cmd.attrNameAndValues.length / 2; i++) {
       attributes[cmd.attrNameAndValues[i]] = cmd.attrNameAndValues[i+1];
@@ -70,13 +68,11 @@ export class RichTextRenderViewBuilder implements RenderCommandVisitor {
   }
 
   visitEndElement(context: BuildContext):any {
-    //console.log('visitEndElement', arguments);
     this.parentStack.pop();
     return undefined;
   }
 
   visitBeginComponent(cmd: RenderBeginComponentCmd, context: BuildContext):any {
-    //console.log('visitBeginComponent', arguments);
     var attributes: any = {};
     for (var i = 0; i < cmd.attrNameAndValues.length / 2; i++) {
       attributes[cmd.attrNameAndValues[i]] = cmd.attrNameAndValues[i+1];
@@ -89,19 +85,17 @@ export class RichTextRenderViewBuilder implements RenderCommandVisitor {
       context.boundElementNodes.push(component);
     }
     context.componentsCount++;
-    var cptBuilder = new RichTextRenderViewBuilder(this.renderer, this.renderer.resolveComponentTemplate(cmd.templateId).commands, component, context);
+    var cptBuilder = new RichTextRenderViewBuilder(this.componentTemplates, this.componentTemplates.get(cmd.templateId).commands, component, context);
     context.enqueueBuilder(cptBuilder);
     return undefined;
   }
 
   visitEndComponent(context: BuildContext):any {
-    //console.log('visitEndComponent', arguments);
     this.parentStack.pop();
     return undefined;
   }
 
   visitEmbeddedTemplate(cmd: RenderEmbeddedTemplateCmd, context: BuildContext):any {
-    //console.log('visitEmbeddedTemplate', arguments);
     var anchor = new AnchorNode();
     this._addChild(anchor, cmd.ngContentIndex);
     context.boundElementNodes.push(anchor);

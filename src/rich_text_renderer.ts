@@ -6,12 +6,17 @@ import {
   RenderViewRef,
   RenderViewWithFragments,
   RenderTemplateCmd,
-  RenderEventDispatcher
+  RenderEventDispatcher,
+  Injectable,
+  Inject,
+  OpaqueToken
 } from 'angular2/angular2';
 import {RenderComponentTemplate} from 'angular2/src/core/render/api';
 import {Node, ComponentNode, ElementNode, TextNode, AnchorNode} from './node';
 import {BuildContext, RichTextRenderViewBuilder} from "./builder";
-import {DOM} from 'angular2/src/core/dom/dom_adapter';
+import {Adapter, DefaultAdapter} from './adapter/default';
+
+export const ADAPTER: OpaqueToken = new OpaqueToken("Adapter");
 
 class RichTextProtoViewRef extends RenderProtoViewRef {
   constructor(public template: RenderComponentTemplate, public cmds: RenderTemplateCmd[]) { super(); }
@@ -27,56 +32,42 @@ class RichTextViewRef extends RenderViewRef {
               public boundElementNodes: Node[]) { super(); }
 }
 
+@Injectable()
 export class RichTextRenderer extends Renderer {
   private _componentTpls: Map<string, RenderComponentTemplate> = new Map<string, RenderComponentTemplate>();
-  private _anchor: Element;
   private _rootView: RenderViewWithFragments;
+  private _adapter: Adapter;
 
-  constructor() {
+  constructor(@Inject(ADAPTER) adapter: Adapter) {
     super();
-    //console.log('constructor', arguments);
+    this._adapter = adapter;
   }
 
   createProtoView(componentTemplateId: string, cmds:RenderTemplateCmd[]):RenderProtoViewRef {
-    //console.log('createProtoView', arguments);
     return new RichTextProtoViewRef(this._componentTpls.get(componentTemplateId), cmds);
   }
 
   registerComponentTemplate(template: RenderComponentTemplate): void {
-    //console.log('registerComponentTemplate', arguments);
     this._componentTpls.set(template.id, template);
   }
 
-  resolveComponentTemplate(templateId: string): RenderComponentTemplate {
-    return this._componentTpls.get(templateId);
-  }
-
   createRootHostView(hostProtoViewRef:RenderProtoViewRef, fragmentCount:number, hostElementSelector:string):RenderViewWithFragments {
-    //console.log('createRootHostView', arguments);
-    var el = DOM.querySelector(DOM.defaultDoc().body, hostElementSelector);
-    if (el) {
-      this._anchor = el;
-      this._rootView = this._createView(hostProtoViewRef);
-      return this._rootView;
-    } else {
-      throw `The selector "${hostElementSelector}" did not match any elements`;
-    }
+    this._adapter.init(hostElementSelector);
+    this._rootView = this._createView(hostProtoViewRef);
+    return this._rootView;
   }
 
   _refresh() {
-    DOM.setInnerHTML(this._anchor,
-      (<RichTextRenderFragmentRef>this._rootView.fragmentRefs[0]).nodes[0].toMarkdown());
+    this._adapter.print((<RichTextRenderFragmentRef>this._rootView.fragmentRefs[0]).nodes[0].toMarkdown());
   }
 
   createView(protoViewRef:RenderProtoViewRef, fragmentCount:number):RenderViewWithFragments {
-    //console.log('createView', arguments);
     return this._createView(protoViewRef);
   }
 
   _createView(protoViewRef:RenderProtoViewRef): RenderViewWithFragments {
-    //console.log('_createView', arguments);
     var context = new BuildContext();
-    var builder = new RichTextRenderViewBuilder(this, (<RichTextProtoViewRef>protoViewRef).cmds, null, context);
+    var builder = new RichTextRenderViewBuilder(this._componentTpls, (<RichTextProtoViewRef>protoViewRef).cmds, null, context);
     context.build(builder);
     var fragments: RichTextRenderFragmentRef[] = [];
     for (var i = 0; i < context.fragments.length; i++) {
@@ -87,12 +78,11 @@ export class RichTextRenderer extends Renderer {
   }
 
   destroyView(viewRef:RenderViewRef):any {
-    console.error('destroyView', arguments);
+    console.error('NOT IMPLEMENTED: destroyView', arguments);
     return undefined;
   }
 
   attachFragmentAfterFragment(previousFragmentRef:RenderFragmentRef, fragmentRef:RenderFragmentRef): void {
-    //console.log('attachFragmentAfterFragment', arguments);
     var previousNodes = (<RichTextRenderFragmentRef>previousFragmentRef).nodes;
     if (previousNodes.length > 0) {
       var sibling = previousNodes[previousNodes.length - 1];
@@ -109,7 +99,6 @@ export class RichTextRenderer extends Renderer {
   }
 
   attachFragmentAfterElement(location:RenderElementRef, fragmentRef:RenderFragmentRef): void {
-    //console.log('attachFragmentAfterElement', arguments);
     var sibling = (<RichTextViewRef>location.renderView).boundElementNodes[(<any>location).boundElementIndex];
     var nodes = (<RichTextRenderFragmentRef>fragmentRef).nodes;
     if (nodes.length > 0 && sibling.parent) {
@@ -123,7 +112,6 @@ export class RichTextRenderer extends Renderer {
   }
 
   detachFragment(fragmentRef:RenderFragmentRef): void {
-    //console.log('detachFragment', arguments);
     var nodes = (<RichTextRenderFragmentRef>fragmentRef).nodes;
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
@@ -134,54 +122,47 @@ export class RichTextRenderer extends Renderer {
   }
 
   hydrateView(viewRef:RenderViewRef): void {
-    //console.log('hydrateView', arguments);
     (<RichTextViewRef>viewRef).hydrated = true;
   }
 
   dehydrateView(viewRef:RenderViewRef): void {
-    //console.log('dehydrateView', arguments);
     (<RichTextViewRef>viewRef).hydrated = false;
   }
 
   getNativeElementSync(location:RenderElementRef):any {
-    //console.log('getNativeElementSync', arguments);
     return (<RichTextViewRef>location.renderView).boundElementNodes[(<any>location).boundElementIndex];
   }
 
   setElementProperty(location:RenderElementRef, propertyName:string, propertyValue:any): void {
-    //console.log('setElementProperty', arguments);
     var node = (<RichTextViewRef>location.renderView).boundElementNodes[(<any>location).boundElementIndex];
     node.attributes[propertyName] = propertyValue;
     this._refresh();
   }
 
   setElementAttribute(location:RenderElementRef, attributeName:string, attributeValue:string): void {
-    //console.log('setElementAttribute', arguments);
     var node = (<RichTextViewRef>location.renderView).boundElementNodes[(<any>location).boundElementIndex];
     node.attributes[attributeName] = attributeValue;
     this._refresh();
   }
 
   setElementClass(location:RenderElementRef, className:string, isAdd:boolean): void {
-    console.error('setElementClass', arguments);
+    console.error('NOT IMPLEMENTED: setElementClass', arguments);
   }
 
   setElementStyle(location:RenderElementRef, styleName:string, styleValue:string): void {
-    console.error('setElementStyle', arguments);
+    console.error('NOT IMPLEMENTED: setElementStyle', arguments);
   }
 
   invokeElementMethod(location:RenderElementRef, methodName:string, args:any[]): void {
-    console.error('invokeElementMethod', arguments);
+    console.error('NOT IMPLEMENTED: invokeElementMethod', arguments);
   }
 
   setText(viewRef:RenderViewRef, textNodeIndex:number, text:string): void {
-    //console.log('setText', arguments);
     (<RichTextViewRef>viewRef).boundTextNodes[textNodeIndex].value = text;
     this._refresh();
   }
 
   setEventDispatcher(viewRef:RenderViewRef, dispatcher:RenderEventDispatcher): void {
-    //console.log('setEventDispatcher', arguments);
     //Do nothing
   }
 

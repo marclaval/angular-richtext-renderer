@@ -4,6 +4,7 @@
   "description": "A rich text renderer for Angular 2",
   "main": "index.js",
   "scripts": {
+    "postinstall": "tsd reinstall -so",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,14 +19,19 @@
   },
   "homepage": "https://github.com/mlaval/angular-richtext-renderer#readme",
   "devDependencies": {
+    "connect": "^3.4.0",
     "del": "^1.2.0",
     "gulp": "^3.9.0",
-    "gulp-typescript": "^2.8.0"
+    "gulp-typescript": "^2.8.0",
+    "open": "0.0.5",
+    "serve-static": "^1.10.0"
   },
   "dependencies": {
     "angular2": "2.0.0-alpha.46",
     "parse5": "1.5.0",
     "reflect-metadata": "0.1.2",
-    "zone.js": "0.5.8"
+    "zone.js": "0.5.8",
+    "es6-shim": "^0.33.6",
+    "systemjs": "0.18.4"
   }
 }

@@ -1,12 +1,7 @@
-// typescript emit metadata
-import 'reflect-metadata';
-// zone.js to track promises
-import 'zone.js/dist/zone-microtask';
-
 import {Component, bootstrap, provide, Renderer, NgIf, NgFor, } from 'angular2/angular2';
-import {RichTextRenderer} from './rich_text_renderer';
-import {Parse5DomAdapter} from 'angular2/src/core/dom/parse5_adapter';
-import {DOM} from 'angular2/src/core/dom/dom_adapter';
+
+import {ADAPTER, RichTextRenderer} from '../../src/rich_text_renderer';
+import {BrowserAdapter} from '../../src/adapter/browser';
 
 @Component({
   selector: 'sub-note',
@@ -25,7 +20,6 @@ export class SubNote {}
     <md-link [attr.url]="url">Angular</md-link>
     <bold *ng-if="maybe">Maybe you can see that</bold>
     <bold *ng-for="#item of items">Item {{item}}</bold>
-
     <sub-note><bold>Test</bold>with love</sub-note>`,
   directives: [NgIf, NgFor, SubNote]
 })
@@ -45,13 +39,9 @@ export class HelloApp {
   }
 }
 
-Parse5DomAdapter.makeCurrent();
-DOM.appendChild(DOM.defaultDoc().body, DOM.createElement('hello-app'));
-bootstrap(HelloApp, [RichTextRenderer, provide(Renderer, {useExisting: RichTextRenderer})]);
-
-setTimeout(() => {
-  console.log(DOM.getInnerHTML(DOM.defaultDoc().body));
-}, 1000);
-setTimeout(() => {
-  console.log(DOM.getInnerHTML(DOM.defaultDoc().body));
-}, 2000);
+bootstrap(HelloApp, [
+  RichTextRenderer,
+  provide(Renderer, {useExisting: RichTextRenderer}),
+  BrowserAdapter,
+  provide(ADAPTER, {useExisting: BrowserAdapter}),
+]);
