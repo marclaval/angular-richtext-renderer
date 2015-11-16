@@ -3,10 +3,10 @@ import 'reflect-metadata';
 // zone.js to track promises
 import 'zone.js/dist/zone-microtask';
 
-import {Component, bootstrap, provide, Renderer, NgIf, NgFor, } from 'angular2/angular2';
+import {Component, NgIf, NgFor, } from 'angular2/angular2';
 import {Parse5DomAdapter} from 'angular2/src/core/dom/parse5_adapter';
 
-import {ADAPTER, RichTextRenderer} from '../../src/rich_text_renderer';
+import {bootstrapRichText} from '../../src/rich_text_renderer';
 import {FsAdapter} from '../../src/adapter/fs';
 
 @Component({
@@ -47,9 +47,4 @@ export class HelloApp {
 }
 
 Parse5DomAdapter.makeCurrent();
-bootstrap(HelloApp, [
-  RichTextRenderer,
-  provide(Renderer, {useExisting: RichTextRenderer}),
-  FsAdapter,
-  provide(ADAPTER, {useExisting: FsAdapter}),
-]);
+bootstrapRichText(HelloApp, FsAdapter);

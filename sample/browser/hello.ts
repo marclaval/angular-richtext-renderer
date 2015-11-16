@@ -1,6 +1,6 @@
-import {Component, bootstrap, provide, Renderer, NgIf, NgFor, } from 'angular2/angular2';
+import {Component, NgIf, NgFor} from 'angular2/angular2';
 
-import {ADAPTER, RichTextRenderer} from '../../src/rich_text_renderer';
+import {bootstrapRichText} from '../../src/rich_text_renderer';
 import {BrowserAdapter} from '../../src/adapter/browser';
 
 @Component({
@@ -39,9 +39,4 @@ export class HelloApp {
   }
 }
 
-bootstrap(HelloApp, [
-  RichTextRenderer,
-  provide(Renderer, {useExisting: RichTextRenderer}),
-  BrowserAdapter,
-  provide(ADAPTER, {useExisting: BrowserAdapter}),
-]);
+bootstrapRichText(HelloApp, BrowserAdapter);

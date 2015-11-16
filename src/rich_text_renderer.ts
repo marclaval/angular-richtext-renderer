@@ -9,14 +9,27 @@ import {
   RenderEventDispatcher,
   Injectable,
   Inject,
-  OpaqueToken
+  OpaqueToken,
+  provide,
+  bootstrap,
+  Type
 } from 'angular2/angular2';
 import {RenderComponentTemplate} from 'angular2/src/core/render/api';
 import {Node, ComponentNode, ElementNode, TextNode, AnchorNode} from './node';
 import {BuildContext, RichTextRenderViewBuilder} from "./builder";
 import {Adapter, DefaultAdapter} from './adapter/default';
 
-export const ADAPTER: OpaqueToken = new OpaqueToken("Adapter");
+const ADAPTER: OpaqueToken = new OpaqueToken("Adapter");
+
+export function bootstrapRichText(cpt: any, adapter: Type) {
+  var _adapter = adapter ? adapter : DefaultAdapter;
+  bootstrap(cpt, [
+    [RichTextRenderer],
+    provide(Renderer, {useExisting: RichTextRenderer}),
+    _adapter,
+    provide(ADAPTER, {useExisting: _adapter})
+  ]);
+}
 
 class RichTextProtoViewRef extends RenderProtoViewRef {
   constructor(public template: RenderComponentTemplate, public cmds: RenderTemplateCmd[]) { super(); }
