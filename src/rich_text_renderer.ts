@@ -18,16 +18,21 @@ import {RenderComponentTemplate} from 'angular2/src/core/render/api';
 import {Node, ComponentNode, ElementNode, TextNode, AnchorNode} from './node';
 import {BuildContext, RichTextRenderViewBuilder} from "./builder";
 import {Adapter, DefaultAdapter} from './adapter/default';
+import {Formatter, DefaultFormatter} from './formatter/default';
 
 export const ADAPTER: OpaqueToken = new OpaqueToken("Adapter");
+export const FORMATTER: OpaqueToken = new OpaqueToken("Formatter");
 
-export function bootstrapRichText(cpt: any, adapter: Type) {
+export function bootstrapRichText(cpt: any, adapter: Type, formatter: Type) {
   var _adapter = adapter ? adapter : DefaultAdapter;
+  var _formatter = formatter ? formatter : DefaultFormatter;
   bootstrap(cpt, [
     [RichTextRenderer],
     provide(Renderer, {useExisting: RichTextRenderer}),
     _adapter,
-    provide(ADAPTER, {useExisting: _adapter})
+    provide(ADAPTER, {useExisting: _adapter}),
+    _formatter,
+    provide(FORMATTER, {useExisting: _formatter})
   ]);
 }
 
@@ -50,10 +55,12 @@ export class RichTextRenderer extends Renderer {
   private _componentTpls: Map<string, RenderComponentTemplate> = new Map<string, RenderComponentTemplate>();
   private _rootView: RenderViewWithFragments;
   private _adapter: Adapter;
+  private _formatter: Formatter;
 
-  constructor(@Inject(ADAPTER) adapter: Adapter) {
+  constructor(@Inject(ADAPTER) adapter: Adapter, @Inject(FORMATTER) formatter: Formatter) {
     super();
     this._adapter = adapter;
+    this._formatter = formatter;
   }
 
   createProtoView(componentTemplateId: string, cmds:RenderTemplateCmd[]):RenderProtoViewRef {
@@ -72,7 +79,7 @@ export class RichTextRenderer extends Renderer {
   }
 
   _refresh() {
-    this._adapter.print((<RichTextRenderFragmentRef>this._rootView.fragmentRefs[0]).nodes[0].toMarkdown());
+    this._adapter.print(this._formatter.format((<RichTextRenderFragmentRef>this._rootView.fragmentRefs[0]).nodes[0]));
   }
 
   createView(protoViewRef:RenderProtoViewRef, fragmentCount:number):RenderViewWithFragments {

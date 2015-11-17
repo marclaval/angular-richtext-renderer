@@ -1,7 +1,8 @@
 import {Component, NgIf, NgFor} from 'angular2/angular2';
 
 import {bootstrapRichText} from '../../src/rich_text_renderer';
-import {BrowserAdapter} from '../../src/adapter/browser';
+import {BrowserAdapter} from "../../src/adapter/browser";
+import {MarkdownFormatter} from "../../src/formatter/markdown";
 
 @Component({
   selector: 'sub-note',
@@ -39,4 +40,4 @@ export class HelloApp {
   }
 }
 
-bootstrapRichText(HelloApp, BrowserAdapter);
+bootstrapRichText(HelloApp, BrowserAdapter, MarkdownFormatter);
