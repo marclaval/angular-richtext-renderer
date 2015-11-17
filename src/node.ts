@@ -1,15 +1,23 @@
 export abstract class Node {
   public parent: Node;
   public children: Node[] = [];
-  public attributes: any;
+  public attribs: Map<string, any> ;
 
   abstract toMarkdown(): string;
+
+  public setAttribute(name: string, value: any) {
+    this.attribs.set(name, value);
+  }
+
+  public getAttribute(name: string): any {
+    return this.attribs.get(name);
+  }
 }
 
 export class ComponentNode extends Node {
   private contentNodesByNgContentIndex: Node[][] = [];
 
-  constructor(public tag: string, public isBound: boolean, public attributes: any, public isRoot: boolean = false) { super(); }
+  constructor(public tag: string, public isBound: boolean, public attribs: Map<string, any>, public isRoot: boolean = false) { super(); }
 
   addContentNode(ngContentIndex: number, node: Node) {
     while (this.contentNodesByNgContentIndex.length <= ngContentIndex) {
@@ -32,7 +40,7 @@ export class ComponentNode extends Node {
 }
 
 export class ElementNode extends Node {
-  constructor(public tag: string, public isBound: boolean, public attributes: any) { super(); }
+  constructor(public tag: string, public isBound: boolean, public attribs: Map<string, any>) { super(); }
 
   public toMarkdown(): string {
     var start: string = '', end: string = '';
@@ -45,7 +53,7 @@ export class ElementNode extends Node {
       case 'header4': start = end = '####'; break;
       case 'header5': start = end = '#####'; break;
       case 'header6': start = end = '######'; break;
-      case 'md-link': start = '['; end = '](' + this.attributes.url + ')'; break;
+      case 'md-link': start = '['; end = '](' + this.getAttribute('url') + ')'; break;
     }
     var res = start;
     this.children.forEach(child => {

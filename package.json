@@ -40,6 +40,6 @@
     "reflect-metadata": "0.1.2",
     "zone.js": "0.5.8",
     "es6-shim": "^0.33.6",
-    "systemjs": "0.18.4"
+    "systemjs": "^0.19.4"
   }
 }

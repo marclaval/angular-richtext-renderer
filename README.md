@@ -15,3 +15,9 @@ To start the demo application in node:
 
 To start the demo application in a browser:
 - run `gulp play.browser` to continuously build it and start a webserver at http://localhost:9001
+
+To run tests in node:
+- run `gulp test.node`
+
+To run tests in Chrome:
+- run `gulp test.browser`

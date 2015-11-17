@@ -19,7 +19,7 @@ import {Node, ComponentNode, ElementNode, TextNode, AnchorNode} from './node';
 import {BuildContext, RichTextRenderViewBuilder} from "./builder";
 import {Adapter, DefaultAdapter} from './adapter/default';
 
-const ADAPTER: OpaqueToken = new OpaqueToken("Adapter");
+export const ADAPTER: OpaqueToken = new OpaqueToken("Adapter");
 
 export function bootstrapRichText(cpt: any, adapter: Type) {
   var _adapter = adapter ? adapter : DefaultAdapter;
@@ -67,6 +67,7 @@ export class RichTextRenderer extends Renderer {
   createRootHostView(hostProtoViewRef:RenderProtoViewRef, fragmentCount:number, hostElementSelector:string):RenderViewWithFragments {
     this._adapter.init(hostElementSelector);
     this._rootView = this._createView(hostProtoViewRef);
+    this._refresh();
     return this._rootView;
   }
 
@@ -148,13 +149,13 @@ export class RichTextRenderer extends Renderer {
 
   setElementProperty(location:RenderElementRef, propertyName:string, propertyValue:any): void {
     var node = (<RichTextViewRef>location.renderView).boundElementNodes[(<any>location).boundElementIndex];
-    node.attributes[propertyName] = propertyValue;
+    node.setAttribute(propertyName, propertyValue);
     this._refresh();
   }
 
   setElementAttribute(location:RenderElementRef, attributeName:string, attributeValue:string): void {
     var node = (<RichTextViewRef>location.renderView).boundElementNodes[(<any>location).boundElementIndex];
-    node.attributes[attributeName] = attributeValue;
+    node.setAttribute(attributeName, attributeValue);
     this._refresh();
   }
 

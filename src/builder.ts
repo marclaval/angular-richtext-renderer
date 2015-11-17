@@ -54,9 +54,9 @@ export class RichTextRenderViewBuilder implements RenderCommandVisitor {
   }
 
   visitBeginElement(cmd: RenderBeginElementCmd, context: BuildContext):any {
-    var attributes: any = {};
+    var attributes: Map<string, any> = new Map<string, any>();
     for (var i = 0; i < cmd.attrNameAndValues.length / 2; i++) {
-      attributes[cmd.attrNameAndValues[i]] = cmd.attrNameAndValues[i+1];
+      attributes.set(cmd.attrNameAndValues[i], cmd.attrNameAndValues[i+1]);
     }
     var element = new ElementNode(cmd.name, cmd.isBound, attributes);
     this._addChild(element, cmd.ngContentIndex);
@@ -73,9 +73,9 @@ export class RichTextRenderViewBuilder implements RenderCommandVisitor {
   }
 
   visitBeginComponent(cmd: RenderBeginComponentCmd, context: BuildContext):any {
-    var attributes: any = {};
+    var attributes: Map<string, any> = new Map<string, any>();
     for (var i = 0; i < cmd.attrNameAndValues.length / 2; i++) {
-      attributes[cmd.attrNameAndValues[i]] = cmd.attrNameAndValues[i+1];
+      attributes.set(cmd.attrNameAndValues[i],cmd.attrNameAndValues[i+1]);
     }
     var isRoot = context.componentsCount == 0;
     var component = new ComponentNode(cmd.name, cmd.isBound, attributes, isRoot);
