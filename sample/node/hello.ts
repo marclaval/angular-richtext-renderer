@@ -8,6 +8,7 @@ import {Parse5DomAdapter} from 'angular2/src/core/dom/parse5_adapter';
 
 import {bootstrapRichText} from '../../src/rich_text_renderer';
 import {FsAdapter} from '../../src/adapter/fs';
+import {MarkdownFormatter} from '../../src/formatter/markdown';
 
 @Component({
   selector: 'sub-note',
@@ -47,4 +48,4 @@ export class HelloApp {
 }
 
 Parse5DomAdapter.makeCurrent();
-bootstrapRichText(HelloApp, FsAdapter);
+bootstrapRichText(HelloApp, FsAdapter, MarkdownFormatter);

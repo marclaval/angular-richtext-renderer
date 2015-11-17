@@ -7,8 +7,10 @@ import {
   expect
 } from 'angular2/testing';
 import {Component, View, Renderer, provide} from 'angular2/angular2';
-import {RichTextRenderer, ADAPTER} from '../src/rich_text_renderer';
+import {RichTextRenderer, ADAPTER, FORMATTER} from '../src/rich_text_renderer';
 import {Adapter} from '../src/adapter/default';
+import {DefaultAdapter} from "../src/adapter/default";
+import {DefaultFormatter} from "../src/formatter/default";
 
 var result = "";
 class MockAdapter extends Adapter {
@@ -23,11 +25,13 @@ describe('RichTextRenderer', () => {
   beforeEachProviders(() => [
     RichTextRenderer,
     provide(Renderer, {useExisting: RichTextRenderer}),
-    provide(ADAPTER, {useValue: new MockAdapter()})
+    provide(ADAPTER, {useValue: new MockAdapter()}),
+    DefaultFormatter,
+    provide(FORMATTER, {useExisting: DefaultFormatter})
   ]);
 
   it('should render', injectAsync([TestComponentBuilder], (tcb) => {
-    return tcb.overrideTemplate(TestComponent, `foo`)
+    return tcb.overrideTemplate(TestComponent, `<a>foo</a>`)
       .createAsync(TestComponent).then((fixture) => {
         fixture.detectChanges();
         expect(result).toEqual('foo');
