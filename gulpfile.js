@@ -28,7 +28,7 @@ gulp.task('ts2commonjs', ['clean'], function () {
 });
 
 gulp.task('sample.commonjs', ['ts2commonjs'], function(done) {
-  exec('node ./build/sample/node/hello.js',
+  exec('node ./build/sample/hello/hello_node.js',
     function (error, stdout, stderr) {
       console.log('stdout: ' + stdout);
       console.log('stderr: ' + stderr);
@@ -39,8 +39,9 @@ gulp.task('sample.commonjs', ['ts2commonjs'], function(done) {
     });
 });
 
-gulp.task('play.node', ['sample.commonjs'], function () {
-    gulp.watch([PATHS.sources.src, PATHS.sources.sample], ['sample.commonjs']);
+gulp.task('sample.node', ['sample.commonjs'], function () {
+  gulp.watch([PATHS.sources.src, PATHS.sources.sample], ['sample.commonjs']);
+  console.log('Sample available in ./build/sample/');
 });
 
 gulp.task('transformTests', ['ts2commonjs'], function() {
@@ -79,7 +80,7 @@ gulp.task('resources', ['ts2system'], function () {
   return gulp.src(PATHS.sources.resources).pipe(gulp.dest(PATHS.destination + '/sample'));
 });
 
-gulp.task('play.browser', ['resources'], function () {
+gulp.task('sample.browser', ['resources'], function () {
   var http = require('http');
   var connect = require('connect');
   var serveStatic = require('serve-static');
@@ -91,7 +92,9 @@ gulp.task('play.browser', ['resources'], function () {
 
   app = connect().use(serveStatic(__dirname));
   http.createServer(app).listen(port, function () {
-    open('http://localhost:' + port + '/build/sample/browser/index.html');
+    var url = 'http://localhost:' + port + '/build/sample/hello/index.html'
+    open(url);
+    console.log('Sample available at ' + url);
   });
 });
 

@@ -11,10 +11,10 @@ A rich text renderer for Angular 2
 ### Running scripts
 
 To start the demo application in node:
-- run `gulp play.node` to continuously build it and generate output in `build/sample/node` folder
+- run `gulp sample.node` to continuously build it and generate output in `build/sample/node` folder
 
 To start the demo application in a browser:
-- run `gulp play.browser` to continuously build it and start a webserver at http://localhost:9001
+- run `gulp sample.browser` to continuously build it and start a webserver at http://localhost:9001
 
 To run tests in node:
 - run `gulp test.node`

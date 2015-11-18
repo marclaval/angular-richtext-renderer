@@ -11,6 +11,6 @@ export class FsAdapter extends Adapter {
   }
 
   print(richText: string) {
-    fs.writeFileSync(path.normalize('./build/sample/node/') + this._fileName, richText);
+    fs.writeFileSync(path.normalize('./build/sample/') + this._fileName, richText);
   }
 }
