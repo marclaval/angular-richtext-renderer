@@ -27,21 +27,22 @@ gulp.task('ts2commonjs', ['clean'], function () {
   return ts2js(PATHS.sources.src, PATHS.destination + '/src');
 });
 
-gulp.task('sample.commonjs', ['ts2commonjs'], function(done) {
-  exec('node ./build/sample/hello/hello_node.js',
-    function (error, stdout, stderr) {
-      console.log('stdout: ' + stdout);
-      console.log('stderr: ' + stderr);
-      if (error !== null) {
-        console.log('exec error: ' + error);
-      }
-      done();
-    });
+gulp.task('sample.hello', ['ts2commonjs'], function(done) {
+  exec('node ./build/sample/hello/hello_node.js', (error, stdout, stderr) => afterRender(error, stdout, stderr, done));
 });
 
-gulp.task('sample.node', ['sample.commonjs'], function () {
-  gulp.watch([PATHS.sources.src, PATHS.sources.sample], ['sample.commonjs']);
+gulp.task('sample.node', ['sample.hello'], function () {
+  gulp.watch([PATHS.sources.src, PATHS.sources.sample], ['sample.hello']);
   console.log('Sample available in ./build/sample/');
+});
+
+gulp.task('sample.doc', ['ts2commonjs'], function(done) {
+  exec('node ./build/sample/doc/README.js', (error, stdout, stderr) => afterRender(error, stdout, stderr, done));
+});
+
+gulp.task('doc', ['sample.doc'], function () {
+  gulp.watch([PATHS.sources.src, PATHS.sources.sample], ['sample.doc']);
+  console.log('Doc available in ./build/sample/');
 });
 
 gulp.task('transformTests', ['ts2commonjs'], function() {
@@ -186,4 +187,11 @@ function transformCommonJSTests() {
     this.push(file);
     done();
   });
+}
+
+function afterRender(error, stdout, stderr, done) {
+  if (stdout) console.log('stdout: ' + stdout);
+  if (stderr) console.log('stderr: ' + stderr);
+  if (error)  console.log('exec error: ' + error);
+  if (done) done();
 }
