@@ -2,6 +2,8 @@ import {Formatter} from './default';
 import {Node, ComponentNode, ElementNode, TextNode, AnchorNode} from '../node';
 
 export class MarkdownFormatter extends Formatter {
+  private _headerAlign: Array<string> = [];
+
   formatComponent(node: ComponentNode): string {
     var res = '';
     node.children.forEach(child => { res += this.format(child); });
@@ -10,18 +12,41 @@ export class MarkdownFormatter extends Formatter {
 
   formatElement(node: ElementNode): string {
     var start: string = '', end: string = '';
+    var res:string = '';
     switch (node.tag) {
-      case 'bold': start = end = '**'; break;
+      //Basics
+      case 'header1': start = '# '; break;
+      case 'header2': start = '## '; break;
+      case 'header3': start = '### '; break;
+      case 'header4': start = '#### '; break;
+      case 'header5': start = '##### '; break;
+      case 'header6': start = '###### '; break;
+      case 'blockquote': start = '> '; break;
       case 'italic': start = end = '*'; break;
-      case 'header1': start = end = '#'; break;
-      case 'header2': start = end = '##'; break;
-      case 'header3': start = end = '###'; break;
-      case 'header4': start = end = '####'; break;
-      case 'header5': start = end = '#####'; break;
-      case 'header6': start = end = '######'; break;
-      case 'md-link': start = '['; end = '](' + node.getAttribute('url') + ')'; break;
+      case 'bold': start = end = '**'; break;
+      case 'unordered': start = '* '; break;
+      case 'ordered': start = (node.getAttribute('index') || 0) + '. '; break;
+      case 'codeline': start = end = '`'; break;
+      case 'codeblock': start = '```' + (node.getAttribute('language') || ''); end = '```'; break;
+      case 'hyperlink': start = '['; end = '](' + node.getAttribute('url') + ')'; break;
+      //Github flavored
+      case 'strikethrough': start = end = '~~'; break;
+      case 'task': start = '* [' + (node.getAttribute('completed') == 'yes' ? 'x' : ' ' ) + '] '; break;
+      case 'header': this._headerAlign.push(node.getAttribute('align')); start = ' '; end = ' |'; break;
+      case 'cell':
+        if (this._headerAlign.length > 0) {
+          for (var i = 0; i < this._headerAlign.length; i++) {
+            var align = this._headerAlign[i];
+            var left = align == 'left' || align == 'center';
+            var right = align == 'right' || align == 'center';
+            res += ` ${left ? ':' : ''}----${right ? ':' : ''} |`;
+          }
+          this._headerAlign = [];
+        }
+        start = ' '; end = ' |';
+        break;
     }
-    var res = start;
+    res += start;
     node.children.forEach(child => {
       res += this.format(child);
     });

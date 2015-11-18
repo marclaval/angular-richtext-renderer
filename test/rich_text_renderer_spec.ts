@@ -1,5 +1,5 @@
 import {
-  injectAsync, TestComponentBuilder,
+  injectAsync, TestComponentBuilder, inject
   beforeEachProviders, beforeEach,
   iit, it, xit,
   describe, ddescribe, xdescribe
@@ -62,47 +62,33 @@ describe('RichTextRenderer', () => {
       });
   }));
 
-  it('should support binding to interpolated properties', injectAsync([TestComponentBuilder], (tcb) => {
-    return tcb.overrideTemplate(TestComponent, `<a-a b="{{s}}">foo</a-a>`)
-      .createAsync(TestComponent).then((fixture) => {
-        fixture.detectChanges();
-        expect(result.richText).toEqual('((a-a) b:bar)foo((/a-a))');
-
-        fixture.debugElement.componentInstance.s = 'baz';
-        fixture.detectChanges();
-        expect(result.richText).toEqual('((a-a) b:baz)foo((/a-a))');
-      });
+  it('should not support binding to interpolated properties', inject([TestComponentBuilder], (tcb) => {
+    expect(tcb.overrideTemplate(TestComponent, `<a b="{{s}}">foo</a>`)
+      .createAsync(TestComponent).then(() => {})).toThrowErrorWith("");
   }));
 
-  it('should support binding to properties', injectAsync([TestComponentBuilder], (tcb) => {
-    return tcb.overrideTemplate(TestComponent, `<a-a [b]="s">foo</a-a>`)
-      .createAsync(TestComponent).then((fixture) => {
-        fixture.detectChanges();
-        expect(result.richText).toEqual('((a-a) b:bar)foo((/a-a))');
-
-        fixture.debugElement.componentInstance.s = 'baz';
-        fixture.detectChanges();
-        expect(result.richText).toEqual('((a-a) b:baz)foo((/a-a))');
-      });
+  it('should not support binding to properties', inject([TestComponentBuilder], (tcb) => {
+    expect(tcb.overrideTemplate(TestComponent, `<a [b]="s">foo</a>`)
+      .createAsync(TestComponent).then(() => {})).toThrowErrorWith("");
   }));
 
   it('should support binding to attributes', injectAsync([TestComponentBuilder], (tcb) => {
-    return tcb.overrideTemplate(TestComponent, `<a-a [attr.b]="s">foo</a-a>`)
+    return tcb.overrideTemplate(TestComponent, `<a [attr.b]="s">foo</a>`)
       .createAsync(TestComponent).then((fixture) => {
         fixture.detectChanges();
-        expect(result.richText).toEqual('((a-a) b:bar)foo((/a-a))');
+        expect(result.richText).toEqual('((a) b:bar)foo((/a))');
 
         fixture.debugElement.componentInstance.s = 'baz';
         fixture.detectChanges();
-        expect(result.richText).toEqual('((a-a) b:baz)foo((/a-a))');
+        expect(result.richText).toEqual('((a) b:baz)foo((/a))');
       });
   }));
 
   it('should support NgIf', injectAsync([TestComponentBuilder], (tcb) => {
-    return tcb.overrideTemplate(TestComponent, `1<a-a *ng-if="b">foo</a-a>2`)
+    return tcb.overrideTemplate(TestComponent, `1<a *ng-if="b">foo</a>2`)
       .createAsync(TestComponent).then((fixture) => {
         fixture.detectChanges();
-        expect(result.richText).toEqual('1((a-a))foo((/a-a))2');
+        expect(result.richText).toEqual('1((a))foo((/a))2');
 
         fixture.debugElement.componentInstance.b = false;
         fixture.detectChanges();

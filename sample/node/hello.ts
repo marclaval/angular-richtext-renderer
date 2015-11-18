@@ -20,10 +20,8 @@ export class SubNote {}
   selector: 'hello-app.md',
   template: `<header1>Hello {{name}}!</header1>
     Say hello to the <bold>world</bold>
-    <md-link url="http://www.github.com">Github</md-link>
-    <md-link [url]="url">Angular</md-link>
-    <md-link url="{{url}}">Angular</md-link>
-    <md-link [attr.url]="url">Angular</md-link>
+    <hyperlink url="http://www.github.com">Github</hyperlink>
+    <hyperlink [attr.url]="url">Angular</hyperlink>
     <bold *ng-if="maybe">Maybe you can see that</bold>
     <bold *ng-for="#item of items">Item {{item}}</bold>
 
