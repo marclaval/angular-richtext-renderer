@@ -28,7 +28,14 @@ export class DefaultFormatter extends Formatter {
   }
 
   formatElement(node: ElementNode): string {
-    var res = `((${node.tag}))`;
+    var res = `((${node.tag})`;
+    if (node.attribs.size > 0) {
+      node.attribs.forEach((value, key) => {
+        if (key != 'data-ngid')
+          res += ` ${key}:${value}`;
+      });
+    }
+    res += ')';
     node.children.forEach(child => { res += this.format(child); });
     res += `((/${node.tag}))`;
     return res;

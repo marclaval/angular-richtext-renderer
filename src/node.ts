@@ -40,5 +40,5 @@ export class TextNode extends Node {
 }
 
 export class AnchorNode extends Node {
-  constructor() { super(); }
+  constructor() { super(); this.attribs = new Map<string, any>();}
 }

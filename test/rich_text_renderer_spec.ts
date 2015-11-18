@@ -5,7 +5,7 @@ import {
   describe, ddescribe, xdescribe
   expect
 } from 'angular2/testing';
-import {Component, View, Renderer, provide} from 'angular2/angular2';
+import {Component, View, Renderer, provide, NgIf, NgFor, NgSwitch, NgSwitchWhen, NgSwitchDefault} from 'angular2/angular2';
 import {RichTextRenderer, ADAPTER, FORMATTER} from '../src/rich_text_renderer';
 import {MockAdapter} from './mock';
 import {DefaultFormatter} from "../src/formatter/default";
@@ -28,17 +28,138 @@ describe('RichTextRenderer', () => {
 
   it('should render text', injectAsync([TestComponentBuilder], (tcb) => {
     return tcb.overrideTemplate(TestComponent, `foo`)
+      .createAsync(TestComponent).then(() => {
+        expect(result.richText).toEqual('foo');
+      });
+  }));
+
+  it('should render element', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `<a>foo</a>`)
+      .createAsync(TestComponent).then(() => {
+        expect(result.richText).toEqual('((a))foo((/a))');
+      });
+  }));
+
+  it('should render element with attributes', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `<a c="d" e="f">foo</a>`)
+      .createAsync(TestComponent).then(() => {
+        expect(result.richText).toEqual('((a) c:d e:f)foo((/a))');
+      });
+  }));
+
+  it('should render component', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `1<sub></sub>2`)
+      .createAsync(TestComponent).then(() => {
+        expect(result.richText).toEqual('1sub2');
+      });
+  }));
+
+  it('should support interpolation', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `1{{s}}2`)
       .createAsync(TestComponent).then((fixture) => {
         fixture.detectChanges();
-        expect(result.richText).toEqual('foo');
+        expect(result.richText).toEqual('1bar2');
+      });
+  }));
+
+  it('should support binding to interpolated properties', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `<a-a b="{{s}}">foo</a-a>`)
+      .createAsync(TestComponent).then((fixture) => {
+        fixture.detectChanges();
+        expect(result.richText).toEqual('((a-a) b:bar)foo((/a-a))');
+
+        fixture.debugElement.componentInstance.s = 'baz';
+        fixture.detectChanges();
+        expect(result.richText).toEqual('((a-a) b:baz)foo((/a-a))');
+      });
+  }));
+
+  it('should support binding to properties', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `<a-a [b]="s">foo</a-a>`)
+      .createAsync(TestComponent).then((fixture) => {
+        fixture.detectChanges();
+        expect(result.richText).toEqual('((a-a) b:bar)foo((/a-a))');
+
+        fixture.debugElement.componentInstance.s = 'baz';
+        fixture.detectChanges();
+        expect(result.richText).toEqual('((a-a) b:baz)foo((/a-a))');
+      });
+  }));
+
+  it('should support binding to attributes', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `<a-a [attr.b]="s">foo</a-a>`)
+      .createAsync(TestComponent).then((fixture) => {
+        fixture.detectChanges();
+        expect(result.richText).toEqual('((a-a) b:bar)foo((/a-a))');
+
+        fixture.debugElement.componentInstance.s = 'baz';
+        fixture.detectChanges();
+        expect(result.richText).toEqual('((a-a) b:baz)foo((/a-a))');
+      });
+  }));
+
+  it('should support NgIf', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `1<a-a *ng-if="b">foo</a-a>2`)
+      .createAsync(TestComponent).then((fixture) => {
+        fixture.detectChanges();
+        expect(result.richText).toEqual('1((a-a))foo((/a-a))2');
+
+        fixture.debugElement.componentInstance.b = false;
+        fixture.detectChanges();
+        expect(result.richText).toEqual('12');
+      });
+  }));
+
+  it('should support NgFor', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `0<template ng-for #item [ng-for-of]="a">{{item}}</template>4`)
+      .createAsync(TestComponent).then((fixture) => {
+        fixture.detectChanges();
+        expect(result.richText).toEqual('01234');
+
+        fixture.debugElement.componentInstance.a.pop();
+        fixture.detectChanges();
+        expect(result.richText).toEqual('0124');
+
+        fixture.debugElement.componentInstance.a = [];
+        fixture.detectChanges();
+        expect(result.richText).toEqual('04');
+
+        fixture.debugElement.componentInstance.a.push(8);
+        fixture.detectChanges();
+        expect(result.richText).toEqual('084');
+      });
+  }));
+
+  it('should support ng-content', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `-<proj><a>a</a><b>b</b></proj>-`)
+      .createAsync(TestComponent).then((fixture) => {
+        fixture.detectChanges();
+        expect(result.richText).toEqual('-0((b))b((/b))1((a))a((/a))2-');
       });
   }));
 
 });
 
 @Component({
+  selector: 'sub',
+  template: `sub`
+})
+class SubComponent {
+}
+@Component({
+  selector: 'proj',
+  template: `0<ng-content select="b"></ng-content>1<ng-content></ng-content>2`
+})
+class SubComponentWithProjection {
+}
+@Component({
   selector: 'test-cmp',
-  template: `to be overriden`
+  template: `to be overriden`,
+  directives: [SubComponent, SubComponentWithProjection, NgIf, NgFor, NgSwitch, NgSwitchWhen, NgSwitchDefault]
 })
 class TestComponent {
+  s: string = 'bar';
+  b: boolean = true;
+  a: Array<number> = [1,2,3];
+  n: number = 0;
 }
