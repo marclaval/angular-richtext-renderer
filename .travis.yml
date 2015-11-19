@@ -1,0 +1,20 @@
+language: node_js
+sudo: false
+node_js:
+- '4.2.1'
+
+env:
+  global:
+  - TSD_GITHUB_TOKEN=be45dfb49486fdb30f73b7ba54b02d7035cdd2ed
+
+addons:
+  firefox: "41.0"
+
+before_install:
+ - npm install -g gulp tsd
+ - export DISPLAY=:99.0
+ - sh -e /etc/init.d/xvfb start
+
+script:
+ - gulp test.node/ci
+ - gulp test.browser/ci

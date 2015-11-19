@@ -1,3 +1,4 @@
+[![Build Status](https://secure.travis-ci.org/mlaval/angular-richtext-renderer.png)](http://travis-ci.org/mlaval/angular-richtext-renderer)
 # angular-richtext-renderer
 A renderer to generate rich text document (e.g. markdown) with Angular 2.
 It can be used in node or in a browser.
@@ -50,5 +51,5 @@ To run the sample in a browser:
 To run tests in node:
 * Launch `gulp test.node`
 
-To run tests in Chrome:
+To run tests in Firefox:
 * Launch `gulp test.browser`

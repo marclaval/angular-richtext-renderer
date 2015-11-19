@@ -10,7 +10,8 @@ import {MarkdownFormatter} from "../../src/formatter/markdown";
 @Component({
   selector: 'README.md',
   template:
-`<header1>angular-richtext-renderer</header1>
+`[![Build Status](https://secure.travis-ci.org/mlaval/angular-richtext-renderer.png)](http://travis-ci.org/mlaval/angular-richtext-renderer)
+<header1>angular-richtext-renderer</header1>
 A renderer to generate rich text document (e.g. markdown) with Angular 2.
 It can be used in node or in a browser.
 
@@ -62,7 +63,7 @@ To run the sample in a browser:
 To run tests in node:
 <unordered>Launch <codeline>gulp test.node</codeline></unordered>
 
-To run tests in Chrome:
+To run tests in Firefox:
 <unordered>Launch <codeline>gulp test.browser</codeline></unordered>
 `
 })

@@ -53,7 +53,7 @@ gulp.task('transformTests', ['ts2commonjs'], function() {
 });
 
 var treatTestErrorsAsFatal = true;
-gulp.task('test.node/ci', function(done) {
+gulp.task('test.node/ci', ['transformTests'], function(done) {
   runJasmine([PATHS.destination + '/test/**/*_spec.js'], done);
 });
 
@@ -121,7 +121,7 @@ gulp.task('test.browser', ['ts2system'], function (neverDone) {
   );
 });
 
-gulp.task('test.browser/ci', function(done) {
+gulp.task('test.browser/ci', ['ts2system'], function(done) {
   new karma({
     configFile: path.join(__dirname, 'karma.conf.js'),
     singleRun: true
