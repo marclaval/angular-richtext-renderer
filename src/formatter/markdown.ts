@@ -46,6 +46,17 @@ export class MarkdownFormatter extends Formatter {
         }
         start = ' '; end = ' |';
         break;
+      default:
+        start = `<${node.tag}`;
+        if (node.attribs.size > 0) {
+          node.attribs.forEach((value, key) => {
+            if (key != 'data-ngid')
+              start += ` ${key}="${value}"`;
+          });
+        }
+        start += '>';
+        end = `</${node.tag}>`;
+        break;
     }
     res += start;
     node.children.forEach(child => {

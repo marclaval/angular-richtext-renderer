@@ -36,14 +36,14 @@ describe('RichTextRenderer', () => {
   it('should render element', injectAsync([TestComponentBuilder], (tcb) => {
     return tcb.overrideTemplate(TestComponent, `<a>foo</a>`)
       .createAsync(TestComponent).then(() => {
-        expect(result.richText).toEqual('((a))foo((/a))');
+        expect(result.richText).toEqual('<a>foo</a>');
       });
   }));
 
   it('should render element with attributes', injectAsync([TestComponentBuilder], (tcb) => {
     return tcb.overrideTemplate(TestComponent, `<a c="d" e="f">foo</a>`)
       .createAsync(TestComponent).then(() => {
-        expect(result.richText).toEqual('((a) c:d e:f)foo((/a))');
+        expect(result.richText).toEqual('<a c="d" e="f">foo</a>');
       });
   }));
 
@@ -76,11 +76,11 @@ describe('RichTextRenderer', () => {
     return tcb.overrideTemplate(TestComponent, `<a [attr.b]="s">foo</a>`)
       .createAsync(TestComponent).then((fixture) => {
         fixture.detectChanges();
-        expect(result.richText).toEqual('((a) b:bar)foo((/a))');
+        expect(result.richText).toEqual('<a b="bar">foo</a>');
 
         fixture.debugElement.componentInstance.s = 'baz';
         fixture.detectChanges();
-        expect(result.richText).toEqual('((a) b:baz)foo((/a))');
+        expect(result.richText).toEqual('<a b="baz">foo</a>');
       });
   }));
 
@@ -88,7 +88,7 @@ describe('RichTextRenderer', () => {
     return tcb.overrideTemplate(TestComponent, `1<a *ng-if="b">foo</a>2`)
       .createAsync(TestComponent).then((fixture) => {
         fixture.detectChanges();
-        expect(result.richText).toEqual('1((a))foo((/a))2');
+        expect(result.richText).toEqual('1<a>foo</a>2');
 
         fixture.debugElement.componentInstance.b = false;
         fixture.detectChanges();
@@ -120,7 +120,7 @@ describe('RichTextRenderer', () => {
     return tcb.overrideTemplate(TestComponent, `-<template ng-for #item [ng-for-of]="d"><a>{{item.a}}</a><b>{{item.b}}</b></template>-`)
       .createAsync(TestComponent).then((fixture) => {
         fixture.detectChanges();
-        expect(result.richText).toEqual('-((a))0((/a))((b))1((/b))((a))8((/a))((b))9((/b))-');
+        expect(result.richText).toEqual('-<a>0</a><b>1</b><a>8</a><b>9</b>-');
       });
   }));
 
@@ -128,7 +128,7 @@ describe('RichTextRenderer', () => {
     return tcb.overrideTemplate(TestComponent, `-<proj><a>a</a><b>b</b></proj>-`)
       .createAsync(TestComponent).then((fixture) => {
         fixture.detectChanges();
-        expect(result.richText).toEqual('-0((b))b((/b))1((a))a((/a))2-');
+        expect(result.richText).toEqual('-0<b>b</b>1<a>a</a>2-');
       });
   }));
 

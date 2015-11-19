@@ -25,9 +25,15 @@ describe('Markdown', () => {
     provide(FORMATTER, {useExisting: MarkdownFormatter})
   ]);
 
+  it('should preserve other elements', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `<a c="d">foo</a>`)
+      .createAsync(TestComponent).then(() => {
+        expect(result.richText).toEqual('<a c="d">foo</a>');
+      });
+  }));
+
   //Reference: https://help.github.com/articles/markdown-basics/
   describe('basics', () => {
-
     it('should support header1', injectAsync([TestComponentBuilder], (tcb) => {
       return tcb.overrideTemplate(TestComponent, `<header1>foo</header1>`)
         .createAsync(TestComponent).then(() => {
