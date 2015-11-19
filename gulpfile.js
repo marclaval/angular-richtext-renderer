@@ -37,7 +37,8 @@ gulp.task('sample.node', ['sample.hello'], function () {
 });
 
 gulp.task('sample.doc', ['ts2commonjs'], function(done) {
-  exec('node ./build/sample/doc/README.js', (error, stdout, stderr) => afterRender(error, stdout, stderr, done));
+  exec('node ./build/sample/doc/README.js', (error, stdout, stderr) => afterRender(error, stdout, stderr, null));
+  exec('node ./build/sample/doc/README-markdown.js', (error, stdout, stderr) => afterRender(error, stdout, stderr, done));
 });
 
 gulp.task('doc', ['sample.doc'], function () {

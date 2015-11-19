@@ -116,6 +116,14 @@ describe('RichTextRenderer', () => {
       });
   }));
 
+  it('should support NgFor with several children and right order', injectAsync([TestComponentBuilder], (tcb) => {
+    return tcb.overrideTemplate(TestComponent, `-<template ng-for #item [ng-for-of]="d"><a>{{item.a}}</a><b>{{item.b}}</b></template>-`)
+      .createAsync(TestComponent).then((fixture) => {
+        fixture.detectChanges();
+        expect(result.richText).toEqual('-((a))0((/a))((b))1((/b))((a))8((/a))((b))9((/b))-');
+      });
+  }));
+
   it('should support ng-content', injectAsync([TestComponentBuilder], (tcb) => {
     return tcb.overrideTemplate(TestComponent, `-<proj><a>a</a><b>b</b></proj>-`)
       .createAsync(TestComponent).then((fixture) => {
@@ -147,5 +155,6 @@ class TestComponent {
   s: string = 'bar';
   b: boolean = true;
   a: Array<number> = [1,2,3];
+  d: Array<Object> = [{a:0,b:1}, {a:8, b:9}]
   n: number = 0;
 }

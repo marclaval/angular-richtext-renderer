@@ -158,7 +158,8 @@ describe('Markdown', () => {
 <cell>a1</cell><cell>b1</cell>
 <cell>a2</cell><cell>b2</cell>`;
       var output =` a | b |
- ---- | ---- | a1 | b1 |
+ ---- | ---- |
+ a1 | b1 |
  a2 | b2 |`;
       return tcb.overrideTemplate(TestComponent, template)
         .createAsync(TestComponent).then(() => {
@@ -171,7 +172,8 @@ describe('Markdown', () => {
 <cell>a1</cell><cell>b1</cell><cell>c1</cell>
 <cell>a2</cell><cell>b2</cell><cell>c2</cell>`;
       var output =` a | b | c |
- ----: | :----: | :---- | a1 | b1 | c1 |
+ ----: | :----: | :---- |
+ a1 | b1 | c1 |
  a2 | b2 | c2 |`;
       return tcb.overrideTemplate(TestComponent, template)
         .createAsync(TestComponent).then(() => {

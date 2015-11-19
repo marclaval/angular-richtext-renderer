@@ -111,7 +111,7 @@ export class RichTextRenderer extends Renderer {
       if (nodes.length > 0 && sibling.parent) {
         for (var i = 0; i < nodes.length; i++) {
           var index = sibling.parent.children.indexOf(sibling);
-          sibling.parent.children.splice(index + 1, 0, nodes[i]);
+          sibling.parent.children.splice(index + i + 1, 0, nodes[i]);
           nodes[i].parent = sibling.parent;
         }
         this._refresh();
@@ -125,7 +125,7 @@ export class RichTextRenderer extends Renderer {
     if (nodes.length > 0 && sibling.parent) {
       for (var i = 0; i < nodes.length; i++) {
         var index = sibling.parent.children.indexOf(sibling);
-        sibling.parent.children.splice(index + 1, 0, nodes[i]);
+        sibling.parent.children.splice(index + i + 1, 0, nodes[i]);
         nodes[i].parent = sibling.parent;
       }
       this._refresh();

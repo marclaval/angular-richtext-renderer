@@ -41,6 +41,7 @@ export class MarkdownFormatter extends Formatter {
             var right = align == 'right' || align == 'center';
             res += ` ${left ? ':' : ''}----${right ? ':' : ''} |`;
           }
+          res += '\n';
           this._headerAlign = [];
         }
         start = ' '; end = ' |';
