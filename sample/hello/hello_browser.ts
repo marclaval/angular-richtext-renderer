@@ -1,6 +1,6 @@
 import {bootstrapRichText} from '../../src/rich_text_renderer';
-import {BrowserAdapter} from "../../src/adapter/browser";
+import {BrowserPrinter} from "../../src/printer/browser";
 import {MarkdownFormatter} from "../../src/formatter/markdown";
 import {HelloApp} from "./hello";
 
-bootstrapRichText(HelloApp, BrowserAdapter, MarkdownFormatter);
+bootstrapRichText(HelloApp, BrowserPrinter, MarkdownFormatter);

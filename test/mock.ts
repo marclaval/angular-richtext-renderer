@@ -1,6 +1,6 @@
-import {Adapter} from '../src/adapter/default';
+import {Printer} from '../src/printer/default';
 
-export class MockAdapter extends Adapter {
+export class MockPrinter extends Printer {
   private _result: Object;
   constructor(result: Object) {
     super();

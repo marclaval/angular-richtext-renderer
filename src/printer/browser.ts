@@ -1,6 +1,6 @@
-import {Adapter} from './default';
+import {Printer} from './default';
 
-export class BrowserAdapter extends Adapter {
+export class BrowserPrinter extends Printer {
   private _anchor: Element;
 
   init(selector: string) {

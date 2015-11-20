@@ -1,9 +1,9 @@
-export abstract class Adapter {
+export abstract class Printer {
   init(selector: string): void {}
   print(richText: string): void {}
 }
 
-export class DefaultAdapter extends Adapter {
+export class DefaultPrinter extends Printer {
 
   init(selector: string) {}
 

@@ -17,20 +17,20 @@ import {
 import {RenderComponentTemplate} from 'angular2/src/core/render/api';
 import {Node, ComponentNode, ElementNode, TextNode, AnchorNode} from './node';
 import {BuildContext, RichTextRenderViewBuilder} from "./builder";
-import {Adapter, DefaultAdapter} from './adapter/default';
+import {Printer, DefaultPrinter} from './printer/default';
 import {Formatter, DefaultFormatter} from './formatter/default';
 
-export const ADAPTER: OpaqueToken = new OpaqueToken("Adapter");
+export const PRINTER: OpaqueToken = new OpaqueToken("Printer");
 export const FORMATTER: OpaqueToken = new OpaqueToken("Formatter");
 
-export function bootstrapRichText(cpt: any, adapter: Type, formatter: Type) {
-  var _adapter = adapter ? adapter : DefaultAdapter;
+export function bootstrapRichText(cpt: any, printer: Type, formatter: Type) {
+  var _printer = printer ? printer : DefaultPrinter;
   var _formatter = formatter ? formatter : DefaultFormatter;
   bootstrap(cpt, [
     [RichTextRenderer],
     provide(Renderer, {useExisting: RichTextRenderer}),
-    _adapter,
-    provide(ADAPTER, {useExisting: _adapter}),
+    _printer,
+    provide(PRINTER, {useExisting: _printer}),
     _formatter,
     provide(FORMATTER, {useExisting: _formatter})
   ]);
@@ -54,12 +54,12 @@ class RichTextViewRef extends RenderViewRef {
 export class RichTextRenderer extends Renderer {
   private _componentTpls: Map<string, RenderComponentTemplate> = new Map<string, RenderComponentTemplate>();
   private _rootView: RenderViewWithFragments;
-  private _adapter: Adapter;
+  private _printer: Printer;
   private _formatter: Formatter;
 
-  constructor(@Inject(ADAPTER) adapter: Adapter, @Inject(FORMATTER) formatter: Formatter) {
+  constructor(@Inject(PRINTER) printer: Printer, @Inject(FORMATTER) formatter: Formatter) {
     super();
-    this._adapter = adapter;
+    this._printer = printer;
     this._formatter = formatter;
   }
 
@@ -72,14 +72,14 @@ export class RichTextRenderer extends Renderer {
   }
 
   createRootHostView(hostProtoViewRef:RenderProtoViewRef, fragmentCount:number, hostElementSelector:string):RenderViewWithFragments {
-    this._adapter.init(hostElementSelector);
+    this._printer.init(hostElementSelector);
     this._rootView = this._createView(hostProtoViewRef);
     this._refresh();
     return this._rootView;
   }
 
   _refresh() {
-    this._adapter.print(this._formatter.format((<RichTextRenderFragmentRef>this._rootView.fragmentRefs[0]).nodes[0]));
+    this._printer.print(this._formatter.format((<RichTextRenderFragmentRef>this._rootView.fragmentRefs[0]).nodes[0]));
   }
 
   createView(protoViewRef:RenderProtoViewRef, fragmentCount:number):RenderViewWithFragments {

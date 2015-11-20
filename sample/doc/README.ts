@@ -4,7 +4,7 @@ import {Parse5DomAdapter} from 'angular2/src/core/dom/parse5_adapter';
 import {Component} from 'angular2/angular2';
 
 import {bootstrapRichText} from '../../src/rich_text_renderer';
-import {FsAdapter} from "../../src/adapter/fs";
+import {FsPrinter} from "../../src/printer/fs";
 import {MarkdownFormatter} from "../../src/formatter/markdown";
 
 @Component({
@@ -18,8 +18,8 @@ It can be used in node or in a browser.
 <bold>All the documentations of this repository have been created with this renderer, including the current lines.</bold>
 
 <header2>Usage</header2>
-Create an Angular2 <codeline>Component</codeline> and use the specific bootstrap method, e.g: <codeline>bootstrapRichText(HelloApp, FsAdapter, MarkdownFormatter);</codeline>
-The <codeline>Formatter</codeline> and <codeline>Adapter</codeline> are required. You can use the ones provided here, or create your own.
+Create an Angular2 <codeline>Component</codeline> and use the specific bootstrap method, e.g: <codeline>bootstrapRichText(HelloApp, FSPrinter, MarkdownFormatter);</codeline>
+The <codeline>Formatter</codeline> and <codeline>Printer</codeline> are required. You can use the ones provided here, or create your own.
 
 For more details, have a look at the <hyperlink url="https://github.com/mlaval/angular-richtext-renderer/tree/master/sample">samples</hyperlink> in this repository.
 
@@ -37,13 +37,13 @@ Two are available:
 <unordered><codeline>DefaultFormatter</codeline>: a simple one which preserves the text but apply all Angular2's magic</unordered>
 <unordered><codeline>MarkdownFormatter</codeline>: it extends the default one by defining special elements matching the markdown syntax, <hyperlink url="README-markdown.md">more info</hyperlink>.</unordered>
 
-<header3>Adapter</header3>
-The <hyperlink url="https://github.com/mlaval/angular-richtext-renderer/tree/master/src/adapter">adapter</hyperlink> is in charge of handling the formatter's output, i.e. the rich text string.
+<header3>Printer</header3>
+The <hyperlink url="https://github.com/mlaval/angular-richtext-renderer/tree/master/src/printer">printer</hyperlink> is in charge of handling the formatter's output, i.e. the rich text string.
 The rich text string is fully generated each time the something is updated and a refresh happens.
 Three are available:
-<unordered><codeline>DefaultAdapter</codeline>: simply logs in the console</unordered>
-<unordered><codeline>FsAdapter</codeline>: saves the rich text in a file</unordered>
-<unordered><codeline>BrowserAdapter</codeline>: displays the rich text in a code HTMLElement</unordered>
+<unordered><codeline>DefaultPrinter</codeline>: simply logs in the console</unordered>
+<unordered><codeline>FsPrinter</codeline>: saves the rich text in a file</unordered>
+<unordered><codeline>BrowserPrinter</codeline>: displays the rich text in a code HTMLElement</unordered>
 
 <header2>Development</header2>
 
@@ -54,8 +54,11 @@ Three are available:
 
 <header3>Running scripts</header3>
 
+To build the documentation:
+<unordered>Launch <codeline>gulp doc</codeline> to continuously build it and generate output in <codeline>./build/sample/</codeline> folder</unordered>
+
 To run the sample in node:
-<unordered>Launch <codeline>gulp sample.node</codeline>  to continuously build it and generate output in <codeline>./build/sample/</codeline> folder</unordered>
+<unordered>Launch <codeline>gulp sample.node</codeline> to continuously build it and generate output in <codeline>./build/sample/</codeline> folder</unordered>
 
 To run the sample in a browser:
 <unordered>Launch <codeline>gulp sample.browser</codeline> to continuously build it and start a webserver at http://localhost:9001</unordered>
@@ -70,4 +73,4 @@ To run tests in Firefox:
 export class Readme {}
 
 Parse5DomAdapter.makeCurrent();
-bootstrapRichText(Readme, FsAdapter, MarkdownFormatter);
+bootstrapRichText(Readme, FsPrinter, MarkdownFormatter);

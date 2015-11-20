@@ -6,8 +6,8 @@ import {
   expect
 } from 'angular2/testing';
 import {Component, View, Renderer, provide, NG} from 'angular2/angular2';
-import {RichTextRenderer, ADAPTER, FORMATTER} from '../src/rich_text_renderer';
-import {MockAdapter} from './mock';
+import {RichTextRenderer, PRINTER, FORMATTER} from '../src/rich_text_renderer';
+import {MockPrinter} from './mock';
 import {MarkdownFormatter} from "../src/formatter/markdown";
 
 var result: Object;
@@ -20,7 +20,7 @@ describe('Markdown', () => {
   beforeEachProviders(() => [
     RichTextRenderer,
     provide(Renderer, {useExisting: RichTextRenderer}),
-    provide(ADAPTER, {useValue: new MockAdapter(result)}),
+    provide(PRINTER, {useValue: new MockPrinter(result)}),
     MarkdownFormatter,
     provide(FORMATTER, {useExisting: MarkdownFormatter})
   ]);

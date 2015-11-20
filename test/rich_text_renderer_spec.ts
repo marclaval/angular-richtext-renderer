@@ -6,8 +6,8 @@ import {
   expect
 } from 'angular2/testing';
 import {Component, View, Renderer, provide, NgIf, NgFor, NgSwitch, NgSwitchWhen, NgSwitchDefault} from 'angular2/angular2';
-import {RichTextRenderer, ADAPTER, FORMATTER} from '../src/rich_text_renderer';
-import {MockAdapter} from './mock';
+import {RichTextRenderer, PRINTER, FORMATTER} from '../src/rich_text_renderer';
+import {MockPrinter} from './mock';
 import {DefaultFormatter} from "../src/formatter/default";
 
 var result: Object;
@@ -20,7 +20,7 @@ describe('RichTextRenderer', () => {
   beforeEachProviders(() => [
     RichTextRenderer,
     provide(Renderer, {useExisting: RichTextRenderer}),
-    provide(ADAPTER, {useValue: new MockAdapter(result)}),
+    provide(PRINTER, {useValue: new MockPrinter(result)}),
     DefaultFormatter,
     provide(FORMATTER, {useExisting: DefaultFormatter})
   ]);

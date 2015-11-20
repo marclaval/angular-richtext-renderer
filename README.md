@@ -6,8 +6,8 @@ It can be used in node or in a browser.
 **All the documentations of this repository have been created with this renderer, including the current lines.**
 
 ## Usage
-Create an Angular2 `Component` and use the specific bootstrap method, e.g: `bootstrapRichText(HelloApp, FsAdapter, MarkdownFormatter);`
-The `Formatter` and `Adapter` are required. You can use the ones provided here, or create your own.
+Create an Angular2 `Component` and use the specific bootstrap method, e.g: `bootstrapRichText(HelloApp, FSPrinter, MarkdownFormatter);`
+The `Formatter` and `Printer` are required. You can use the ones provided here, or create your own.
 
 For more details, have a look at the [samples](https://github.com/mlaval/angular-richtext-renderer/tree/master/sample) in this repository.
 
@@ -25,13 +25,13 @@ Two are available:
 * `DefaultFormatter`: a simple one which preserves the text but apply all Angular2's magic
 * `MarkdownFormatter`: it extends the default one by defining special elements matching the markdown syntax, [more info](README-markdown.md).
 
-### Adapter
-The [adapter](https://github.com/mlaval/angular-richtext-renderer/tree/master/src/adapter) is in charge of handling the formatter's output, i.e. the rich text string.
+### Printer
+The [printer](https://github.com/mlaval/angular-richtext-renderer/tree/master/src/printer) is in charge of handling the formatter's output, i.e. the rich text string.
 The rich text string is fully generated each time the something is updated and a refresh happens.
 Three are available:
-* `DefaultAdapter`: simply logs in the console
-* `FsAdapter`: saves the rich text in a file
-* `BrowserAdapter`: displays the rich text in a code HTMLElement
+* `DefaultPrinter`: simply logs in the console
+* `FsPrinter`: saves the rich text in a file
+* `BrowserPrinter`: displays the rich text in a code HTMLElement
 
 ## Development
 
@@ -42,8 +42,11 @@ Three are available:
 
 ### Running scripts
 
+To build the documentation:
+* Launch `gulp doc` to continuously build it and generate output in `./build/sample/` folder
+
 To run the sample in node:
-* Launch `gulp sample.node`  to continuously build it and generate output in `./build/sample/` folder
+* Launch `gulp sample.node` to continuously build it and generate output in `./build/sample/` folder
 
 To run the sample in a browser:
 * Launch `gulp sample.browser` to continuously build it and start a webserver at http://localhost:9001

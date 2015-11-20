@@ -1,9 +1,9 @@
 /// <reference path="../../typings/typings.d.ts" />
-import {Adapter} from './default';
+import {Printer} from './default';
 import * as fs from 'fs';
 import * as path from 'path';
 
-export class FsAdapter extends Adapter {
+export class FsPrinter extends Printer {
   private _fileName: string;
 
   init(selector: string) {
