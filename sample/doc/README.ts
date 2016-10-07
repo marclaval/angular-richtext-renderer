@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import 'zone.js/dist/zone-microtask';
-import {Parse5DomAdapter} from 'angular2/src/core/dom/parse5_adapter';
-import {Component} from 'angular2/angular2';
+import 'zone.js/dist/zone-node';
+import {Component, NgModule, ApplicationModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
 import {bootstrapRichText} from '../../src/rich_text_renderer';
 import {FsPrinter} from "../../src/printer/fs";
@@ -49,8 +49,8 @@ Three are available:
 
 <header3>Preparing your environment</header3>
 <unordered>Clone this repository or a fork of it</unordered>
-<unordered>Install Gulp and TSD globally: <codeline>npm install -g gulp tsd</codeline></unordered>
-<unordered>Install local npm modules: <codeline>npm install -g gulp tsd</codeline></unordered>
+<unordered>Install Gulp and TSD globally: <codeline>npm install -g gulp typings</codeline></unordered>
+<unordered>Install local npm modules: <codeline>npm install</codeline></unordered>
 
 <header3>Running scripts</header3>
 
@@ -63,14 +63,18 @@ To run the sample in node:
 To run the sample in a browser:
 <unordered>Launch <codeline>gulp sample.browser</codeline> to continuously build it and start a webserver at http://localhost:9001</unordered>
 
-To run tests in node:
-<unordered>Launch <codeline>gulp test.node</codeline></unordered>
-
 To run tests in Firefox:
 <unordered>Launch <codeline>gulp test.browser</codeline></unordered>
 `
 })
 export class Readme {}
 
-Parse5DomAdapter.makeCurrent();
-bootstrapRichText(Readme, FsPrinter, MarkdownFormatter);
+
+@NgModule({
+  declarations: [Readme],
+  imports: [ApplicationModule, CommonModule],
+  bootstrap: [Readme],
+  schemas: [NO_ERRORS_SCHEMA]
+})
+export class ReadmeModule {}
+bootstrapRichText(ReadmeModule, FsPrinter, MarkdownFormatter);

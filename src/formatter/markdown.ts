@@ -1,14 +1,8 @@
 import {Formatter} from './default';
-import {Node, ComponentNode, ElementNode, TextNode, AnchorNode} from '../node';
+import {ElementNode, TextNode, AnchorNode} from '../node';
 
 export class MarkdownFormatter extends Formatter {
   private _headerAlign: Array<string> = [];
-
-  formatComponent(node: ComponentNode): string {
-    var res = '';
-    node.children.forEach(child => { res += this.format(child); });
-    return res;
-  }
 
   formatElement(node: ElementNode): string {
     var start: string = '', end: string = '';
