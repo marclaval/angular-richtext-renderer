@@ -1,4 +1,5 @@
-import {Component, NgIf, NgFor} from 'angular2/angular2';
+import {Component, NgModule, ApplicationModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'sub-note',
@@ -13,10 +14,9 @@ export class SubNote {}
     Say hello to the <bold>world</bold>
     <hyperlink url="http://www.github.com">Github</hyperlink>
     <hyperlink [attr.url]="url">Angular</hyperlink>
-    <bold *ng-if="maybe">Maybe you can see that</bold>
-    <bold *ng-for="#item of items">Item {{item}}</bold>
-    <sub-note><bold>Test</bold>with love</sub-note>`,
-  directives: [NgIf, NgFor, SubNote]
+    <bold *ngIf="maybe">Maybe you can see that</bold>
+    <bold *ngFor="let item of items">Item {{item}}</bold>
+    <sub-note><bold>Test</bold>with love</sub-note>`
 })
 export class HelloApp {
   name: string = 'world';
@@ -33,3 +33,11 @@ export class HelloApp {
     }, 1000);
   }
 }
+
+@NgModule({
+  declarations: [HelloApp],
+  imports: [ApplicationModule, CommonModule],
+  bootstrap: [HelloApp],
+  schemas: [NO_ERRORS_SCHEMA]
+})
+export class HelloModule {}

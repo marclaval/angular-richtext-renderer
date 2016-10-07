@@ -1,6 +1,6 @@
 # Markdown formatter
 This formatter defines a set of elements which are matching the Markdown syntax.
-It implements [Markdown basics](https://help.github.com/articles/markdown-basics/) and [Github flavored markdown]().
+It implements [Markdown basics](https://help.github.com/articles/markdown-basics/) and [Github flavored markdown](https://help.github.com/articles/github-flavored-markdown/).
 
 These elements are **optional**, but needed to apply directives. They are:
 

@@ -1,4 +1,3 @@
-/// <reference path="../../typings/typings.d.ts" />
 import {Printer} from './default';
 import * as fs from 'fs';
 import * as path from 'path';

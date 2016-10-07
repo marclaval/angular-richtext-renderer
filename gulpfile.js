@@ -23,7 +23,7 @@ var PATHS = {
 /**********************************************************************************/
 gulp.task('ts2commonjs', ['clean'], function () {
   ts2js(PATHS.sources.sample, PATHS.destination + '/sample');
-  ts2js(PATHS.sources.test, PATHS.destination + '/test', false, true);
+  ts2js(PATHS.sources.test, PATHS.destination + '/test', false);
   return ts2js(PATHS.sources.src, PATHS.destination + '/src');
 });
 
@@ -74,7 +74,7 @@ gulp.task('test.node', ['transformTests'], function(neverDone) {
 /**********************************************************************************/
 gulp.task('ts2system', ['clean'], function () {
   ts2js(PATHS.sources.sample, PATHS.destination + '/sample', true);
-  ts2js(PATHS.sources.test, PATHS.destination + '/test', true, true);
+  ts2js(PATHS.sources.test, PATHS.destination + '/test', true);
   return ts2js(PATHS.sources.src, PATHS.destination + '/src', true);
 });
 
@@ -137,8 +137,8 @@ gulp.task('clean', function (done) {
   del(['build'], done);
 });
 
-function ts2js(path, dest, toSystem, isSilent) {
-  var tsResult = gulp.src(path)
+function ts2js(path, dest, toSystem) {
+  var tsResult = gulp.src([path].concat(['typings/index.d.ts']))
     .pipe(typescript({
       noImplicitAny: true,
       module: toSystem ? 'system' : 'commonjs',
@@ -147,9 +147,7 @@ function ts2js(path, dest, toSystem, isSilent) {
       emitDecoratorMetadata: true,
       experimentalDecorators: true
     },
-      undefined,
-      //TODO: remove once angular2/testing typings are solved
-      isSilent ? typescript.reporter.nullReporter() : typescript.reporter.defaultReporter()));
+      typescript.reporter.defaultReporter()));
   return tsResult.js.pipe(gulp.dest(dest));
 }
 

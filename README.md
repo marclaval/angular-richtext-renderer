@@ -37,8 +37,8 @@ Three are available:
 
 ### Preparing your environment
 * Clone this repository or a fork of it
-* Install Gulp and TSD globally: `npm install -g gulp tsd`
-* Install local npm modules: `npm install -g gulp tsd`
+* Install Gulp and TSD globally: `npm install -g gulp typings`
+* Install local npm modules: `npm install`
 
 ### Running scripts
 
@@ -50,9 +50,6 @@ To run the sample in node:
 
 To run the sample in a browser:
 * Launch `gulp sample.browser` to continuously build it and start a webserver at http://localhost:9001
-
-To run tests in node:
-* Launch `gulp test.node`
 
 To run tests in Firefox:
 * Launch `gulp test.browser`

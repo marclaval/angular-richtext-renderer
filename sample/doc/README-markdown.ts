@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import 'zone.js/dist/zone-microtask';
-import {Parse5DomAdapter} from 'angular2/src/core/dom/parse5_adapter';
-import {Component, NgFor} from 'angular2/angular2';
+import 'zone.js/dist/zone-node';
+import {Component, NgModule, ApplicationModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
 import {bootstrapRichText} from '../../src/rich_text_renderer';
 import {FsPrinter} from "../../src/printer/fs";
@@ -9,16 +9,15 @@ import {MarkdownFormatter} from "../../src/formatter/markdown";
 
 @Component({
   selector: 'README-markdown.md',
-  directives: [NgFor],
   template:
 `<header1>Markdown formatter</header1>
 This formatter defines a set of elements which are matching the Markdown syntax.
-It implements <hyperlink url="https://help.github.com/articles/markdown-basics/">Markdown basics</hyperlink> and <hyperlink url=""https://help.github.com/articles/github-flavored-markdown/>Github flavored markdown</hyperlink>.
+It implements <hyperlink url="https://help.github.com/articles/markdown-basics/">Markdown basics</hyperlink> and <hyperlink url="https://help.github.com/articles/github-flavored-markdown/">Github flavored markdown</hyperlink>.
 
 These elements are <bold>optional</bold>, but needed to apply directives. They are:
 
-<header align="center">Tag</header><header align="center">Attribute</header><header align="center">Description</header><header align="center">Sample</header><header align="center">Output</header><template ng-for #data [ng-for-of]="dataset">
-<cell>{{data.tag}}</cell><cell>{{data.attribute}}</cell><cell>{{data.description}}</cell></cell><cell>\`{{data.sample}}\`</cell></cell><cell>\`{{data.output}}\`</cell></template>
+<header align="center">Tag</header><header align="center">Attribute</header><header align="center">Description</header><header align="center">Sample</header><header align="center">Output</header><template ngFor let-data [ngForOf]="dataset">
+<cell>{{data.tag}}</cell><cell>{{data.attribute}}</cell><cell>{{data.description}}</cell><cell>\`{{data.sample}}\`</cell><cell>\`{{data.output}}\`</cell></template>
 `
 })
 export class Readme {
@@ -44,5 +43,11 @@ export class Readme {
   ]
 }
 
-Parse5DomAdapter.makeCurrent();
-bootstrapRichText(Readme, FsPrinter, MarkdownFormatter);
+@NgModule({
+  declarations: [Readme],
+  imports: [ApplicationModule, CommonModule],
+  bootstrap: [Readme],
+  schemas: [NO_ERRORS_SCHEMA]
+})
+export class ReadmeModule {}
+bootstrapRichText(ReadmeModule, FsPrinter, MarkdownFormatter);

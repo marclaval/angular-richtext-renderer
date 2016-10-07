@@ -1,11 +1,9 @@
-import {Node, ComponentNode, ElementNode, TextNode, AnchorNode} from '../node';
+import {Node, ElementNode, TextNode, AnchorNode} from '../node';
 
 export abstract class Formatter {
 
   public format(node: Node): string {
-    if (node instanceof ComponentNode) {
-      return this.formatComponent(node);
-    } else if (node instanceof ElementNode) {
+    if (node instanceof ElementNode) {
       return this.formatElement(node);
     } else if (node instanceof TextNode) {
       return this.formatText(node);
@@ -14,19 +12,12 @@ export abstract class Formatter {
     }
   }
 
-  abstract formatComponent(node: ComponentNode): string;
   abstract formatElement(node: ElementNode): string;
   abstract formatText(node: TextNode): string;
   abstract formatAnchor(node: AnchorNode): string;
 }
 
 export class DefaultFormatter extends Formatter {
-  formatComponent(node: ComponentNode): string {
-    var res = '';
-    node.children.forEach(child => { res += this.format(child); });
-    return res;
-  }
-
   formatElement(node: ElementNode): string {
     var res = `<${node.tag}`;
     if (node.attribs.size > 0) {
