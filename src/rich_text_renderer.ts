@@ -39,6 +39,12 @@ export class RichTextElementSchemaRegistry implements ElementSchemaRegistry {
   securityContext(tagName: string, propName: string): any {
     return 0;
   }
+  validateProperty(name: string): {error: boolean; msg?: string} {
+    return {error: false};
+  }
+  validateAttribute(name: string): {error: boolean; msg?: string} {
+    return {error: false};
+  }
 }
 
 export class RichTextSanitizer implements Sanitizer {
